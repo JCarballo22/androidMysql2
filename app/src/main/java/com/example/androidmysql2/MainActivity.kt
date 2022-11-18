@@ -1,5 +1,6 @@
 package com.example.androidmysql2
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -22,10 +23,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        etId = findViewById(R.id.et_Nombre)
+        etNombre = findViewById(R.id.et_Nombre)
         etEmail = findViewById(R.id.et_email)
         etTelefono = findViewById(R.id.et_Telefono)
         etPass = findViewById(R.id.et_Pass)
+        etId = findViewById(R.id.et_Id)
     }
 
     fun Guardar(Vista:View){
@@ -34,31 +36,30 @@ class MainActivity : AppCompatActivity() {
         var resultadoPost = object: StringRequest(Request.Method.POST,url,
                Response.Listener<String> { respuesta ->
                 Toast.makeText(this,"Usuario insertado exitosamente", Toast.LENGTH_LONG).show()
+                   etNombre?.setText("")
+                   etEmail?.setText("")
+                   etTelefono?.setText("")
+                   etPass?.setText("")
             }, Response.ErrorListener { error->
                 Toast.makeText(this,"Error $error",Toast.LENGTH_LONG).show()
             }){
-
             override fun getParams(): MutableMap<String, String> {
                     val parametro = HashMap<String,String>()
                     parametro.put("nombre", etNombre?.text.toString())
                     parametro.put("email",etEmail?.text.toString())
                     parametro.put("telefono",etTelefono?.text.toString())
                     parametro.put("pass", etPass?.text.toString())
-
                     return parametro
-
                 }
-
             }
-            etNombre?.setText("")
-            etEmail?.setText("")
-            etTelefono?.setText("")
-            etPass?.setText("")
             procesoEnCola.add(resultadoPost)
-
-
-
         }
+
+    fun siguiente(Vista: View){
+        var ventana:Intent = Intent(this,RegistrosActivity::class.java)
+        ventana.putExtra("id",etId?.text.toString())
+        startActivity(ventana)
+    }
 
 
 }
